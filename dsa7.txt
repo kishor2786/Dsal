@@ -1,0 +1,98 @@
+04.14 6:56 PM
+Dsal7
+
+#include <iostream>
+using namespace std;
+
+class tree {
+    int a[20][20], n;
+
+public:
+    void input();
+    void display();
+    void minimum();
+};
+
+void tree::input() {
+    int i, j;
+    cout << "\nEnter number of vertices: ";
+    cin >> n;
+    cout << "\nEnter the cost adjacency matrix (-1 for no connection):\n";
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            cin >> a[i][j];
+            if (a[i][j] == -1)
+                a[i][j] = 999; // represents infinity / no edge
+        }
+    }
+}
+
+void tree::display() {
+    cout << "\nAdjacency Matrix:\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++)
+            cout << a[i][j] << "\t";
+        cout << endl;
+    }
+}
+
+void tree::minimum() {
+    int visited[20] = {0};
+    int mincost = 0;
+    visited[0] = 1;
+
+    cout << "\nEdges in the Minimum Spanning Tree:\n";
+    for (int count = 0; count < n - 1; count++) {
+        int min = 999, u = -1, v = -1;
+        for (int i = 0; i < n; i++) {
+            if (visited[i]) {
+                for (int j = 0; j < n; j++) {
+                    if (!visited[j] && a[i][j] < min) {
+                        min = a[i][j];
+                        u = i;
+                        v = j;
+                    }
+                }
+            }
+        }
+        if (u != -1 && v != -1) {
+            visited[v] = 1;
+            cout << u << " -> " << v << " = " << a[u][v] << endl;
+            mincost += a[u][v];
+        }
+    }
+    cout << "\nTotal Cost of Minimum Spanning Tree = " << mincost << endl;
+}
+
+int main() {
+    tree t;
+    int choice;
+    do {
+        cout << "\n--- Prim's Algorithm Menu ---";
+        cout << "\n1. Input Graph";
+        cout << "\n2. Display Matrix";
+        cout << "\n3. Generate Minimum Spanning Tree";
+        cout << "\n4. Exit";
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            t.input();
+            break;
+        case 2:
+            t.display();
+            break;
+        case 3:
+            t.minimum();
+            break;
+        case 4:
+            cout << "Exiting...\n";
+            break;
+        default:
+            cout << "Invalid choice! Try again.\n";
+        }
+    } while (choice != 4);
+
+    return 0;
+}

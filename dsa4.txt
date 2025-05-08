@@ -1,0 +1,66 @@
+04.11 9:07 AM
+Dsal4
+
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+struct node {
+    int data;
+    node* left;
+    node* right;
+
+    node(int value) {
+        data = value;
+        left = right = NULL;
+    }
+};
+
+// Insert node into BST
+node* insert(node* root, int value) {
+    if (root == NULL) {
+        return new node(value);
+    }
+
+    if (value < root->data) {
+        root->left = insert(root->left, value);
+    } else {
+        root->right = insert(root->right, value);
+    }
+
+    return root;
+}
+
+// Find height of BST
+int height(node* root) {
+    if (root == NULL) return 0;
+
+    int leftHeight = height(root->left);
+    int rightHeight = height(root->right);
+
+    return max(leftHeight, rightHeight) + 1;
+}
+
+// Find minimum value in BST
+int findMin(node* root) {
+    if (root == NULL) return -1;
+
+    while (root->left != NULL)
+        root = root->left;
+
+    return root->data;
+}
+
+// Mirror the BST
+void mirror(node* root) {
+    if (root == NULL) return;
+
+    swap(root->left, root->right);
+    mirror(root->left);
+    mirror(root->right);
+}
+
+// Search for a value in BST
+bool search(node* root, int key) {
+    if (root == NULL) return false;
+    if (root->data ==

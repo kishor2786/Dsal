@@ -1,0 +1,158 @@
+04.14 7:01 PM
+Dsal 6
+#include <iostream>
+#include <cstdlib>
+#include <iomanip>
+#include <string>
+using namespace std;
+
+struct node {
+    string vertex;
+    int time;
+    node* next;
+};
+
+class adjmatlist {
+    int m[20][20], n, i, j;
+    char ch;
+    string v[20];
+    node* head[20];
+    node* temp = NULL;
+
+public:
+    adjmatlist() {
+        for (i = 0; i < 20; i++) {
+            head[i] = NULL;
+            for (j = 0; j < 20; j++) {
+                m[i][j] = 0;
+            }
+        }
+    }
+
+    void getgraph();
+    void adjlist();
+    void displaym();
+    void displaya();
+};
+
+void adjmatlist::getgraph() {
+    cout << "\nEnter number of cities (max 20): ";
+    cin >> n;
+    cout << "\nEnter names of cities: ";
+    for (i = 0; i < n; i++) {
+        cin >> v[i];
+    }
+
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            cout << "\nIs there a path from " << v[i] << " to " << v[j] << "? (y/n): ";
+            cin >> ch;
+            if (ch == 'y') {
+                cout << "Enter time in minutes to reach " << v[j] << " from " << v[i] << ": ";
+                cin >> m[i][j];
+            } else if (ch == 'n') {
+                m[i][j] = 0;
+            } else {
+                cout << "Unknown entry!";
+                m[i][j] = 0;
+            }
+        }
+    }
+
+    adjlist();
+}
+
+void adjmatlist::adjlist() {
+    for (i = 0; i < n; i++) {
+        node* p = new node;
+        p->next = NULL;
+        p->vertex = v[i];
+        head[i] = p;
+    }
+
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            if (m[i][j] != 0) {
+                node* p = new node;
+                p->vertex = v[j];
+                p->time = m[i][j];
+                p->next = NULL;
+
+                if (head[i]->next == NULL) {
+                    head[i]->next = p;
+                } else {
+                    temp = head[i];
+                    while (temp->next != NULL) {
+                        temp = temp->next;
+                    }
+                    temp->next = p;
+                }
+            }
+        }
+    }
+}
+
+void adjmatlist::displaym() {
+    cout << "\nAdjacency Matrix:\n";
+    cout << setw(15) << "";
+    for (j = 0; j < n; j++) {
+        cout << setw(15) << v[j];
+    }
+    cout << "\n";
+    for (i = 0; i < n; i++) {
+        cout << setw(15) << v[i];
+        for (j = 0; j < n; j++) {
+            cout << setw(15) << m[i][j];
+        }
+        cout << "\n";
+    }
+}
+
+void adjmatlist::displaya() {
+    cout << "\nAdjacency List with Travel Times:";
+    for (i = 0; i < n; i++) {
+        if (head[i] == NULL) {
+            cout << "\nNo adjacency list for " << v[i];
+            continue;
+        }
+        cout << "\n" << head[i]->vertex;
+        temp = head[i]->next;
+        while (temp != NULL) {
+            cout << " -> " << temp->vertex << " [time: " << temp->time << " min]";
+            temp = temp->next;
+        }
+    }
+    cout << endl;
+}
+
+int main() {
+    int m;
+    adjmatlist a;
+    while (1) {
+        cout << "\n\tGRAPH MENU:";
+        cout << "\n1. Enter Graph";
+        cout << "\n2. Display Adjacency Matrix";
+        cout << "\n3. Display Adjacency List";
+        cout << "\n4. Exit";
+        cout << "\nEnter your choice: ";
+        cin >> m;
+
+        switch (m) {
+        case 1:
+            a.getgraph();
+            break;
+        case 2:
+            a.displaym();
+            break;
+        case 3:
+            a.displaya();
+            break;
+        case 4:
+            exit(0);
+        default:
+            cout << "Unknown choice!";
+        }
+    }
+
+    return 0;
+}
