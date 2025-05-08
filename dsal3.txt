@@ -1,0 +1,110 @@
+05.07 2:37 PM
+Dsal 3
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+
+using namespace std;
+
+struct Node {
+    char label[50];
+    int child_count;
+    Node* child[10];
+};
+
+class BookTree {
+private:
+    Node* root;
+
+public:
+    BookTree() {
+        root = nullptr;
+    }
+
+    void createTree();
+    void display(Node* node);
+    Node* getRoot() {
+        return root;
+    }
+};
+
+void BookTree::createTree() {
+    int totalChapters;
+
+    root = new Node();
+    cout << "Enter the name of the book: ";
+    cin.ignore();
+    cin.getline(root->label, 50);
+
+    cout << "Enter the number of chapters in the book: ";
+    cin >> totalChapters;
+    root->child_count = totalChapters;
+
+    for (int i = 0; i < totalChapters; i++) {
+        root->child[i] = new Node();
+        cout << "\nEnter the name of Chapter " << i + 1 << ": ";
+        cin.ignore();
+        cin.getline(root->child[i]->label, 50);
+
+        cout << "Enter the number of sections in Chapter " << i + 1 << ": ";
+        cin >> root->child[i]->child_count;
+
+        for (int j = 0; j < root->child[i]->child_count; j++) {
+            root->child[i]->child[j] = new Node();
+            cout << "  Enter the name of Section " << j + 1 << ": ";
+            cin.ignore();
+            cin.getline(root->child[i]->child[j]->label, 50);
+        }
+    }
+}
+
+void BookTree::display(Node* node) {
+    if (node != nullptr) {
+        cout << "\n\n----- Book Hierarchy -----" << endl;
+        cout << "Book Title: " << node->label << endl;
+
+        for (int i = 0; i < node->child_count; i++) {
+            cout << "\n  Chapter " << i + 1 << ": " << node->child[i]->label << endl;
+            cout << "    Sections:" << endl;
+
+            for (int j = 0; j < node->child[i]->child_count; j++) {
+                cout << "      - " << node->child[i]->child[j]->label << endl;
+            }
+        }
+    } else {
+        cout << "\nNo book data available. Please create a book first." << endl;
+    }
+}
+
+int main() {
+    int choice;
+    BookTree bookTree;
+
+    while (true) {
+        cout << "\n---------------------------" << endl;
+        cout << "      Book Tree Menu       " << endl;
+        cout << "---------------------------" << endl;
+
+        cout << "1. Create Book Tree" << endl;
+        cout << "2. Display Book Tree" << endl;
+        cout << "3. Quit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            bookTree.createTree();
+            break;
+        case 2:
+            bookTree.display(bookTree.getRoot());
+            break;
+        case 3:
+            cout << "Exiting program. Goodbye!" << endl;
+            exit(0);
+        default:
+            cout << "Invalid choice. Please try again." << endl;
+        }
+    }
+
+    return 0;
+}

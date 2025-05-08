@@ -1,0 +1,78 @@
+05.04 3:58 PM
+Dsal 10
+
+#include <iostream>
+using namespace std;
+
+class HeapProcessor {
+    int maxHeap[20], minHeap[20];
+    int n, t;  // n = number of students, t = heap size
+
+public:
+    HeapProcessor() {
+        t = 0; // initialize heap size
+    }
+
+    void insertMaxHeap(int x) {
+        maxHeap[++t] = x;
+        int child = t;
+
+        while (child > 1 && maxHeap[child] > maxHeap[child / 2]) {
+            swap(maxHeap[child], maxHeap[child / 2]);
+            child = child / 2;
+        }
+    }
+
+    void insertMinHeap(int x) {
+        minHeap[t] = x;  // use same t without incrementing again
+        int child = t;
+
+        while (child > 1 && minHeap[child] < minHeap[child / 2]) {
+            swap(minHeap[child], minHeap[child / 2]);
+            child = child / 2;
+        }
+    }
+
+    void buildHeaps() {
+        t = 0;
+        cout << "Enter number of students: ";
+        cin >> n;
+
+        cout << "Enter marks:\n";
+        for (int i = 0; i < n; i++) {
+            int mark;
+            cin >> mark;
+            insertMaxHeap(mark);  // maxHeap uses t++
+            insertMinHeap(mark);  // minHeap uses same t
+        }
+
+        cout << "\nMaximum marks: " << maxHeap[1];
+        cout << "\nMinimum marks: " << minHeap[1] << "\n";
+    }
+};
+
+int main() {
+    HeapProcessor h;
+    int choice;
+
+    do {
+        cout << "\n--- Min/Max Heap Menu ---";
+        cout << "\n1. Enter & Find Min/Max Marks";
+        cout << "\n2. Exit";
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            h.buildHeaps();
+            break;
+        case 2:
+            cout << "Exiting...\n";
+            break;
+        default:
+            cout << "Invalid choice. Try again!\n";
+        }
+    } while (choice != 2);
+
+    return 0;
+}

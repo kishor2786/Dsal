@@ -1,0 +1,104 @@
+05.07 3:07 PM
+class Record:
+    def __init__(self, name=None, number=None):
+        self.name = name
+        self.number = number
+
+    def get_name(self):
+        return self.name
+
+    def get_number(self):
+        return self.number
+
+    def __str__(self):
+        return f"Name: {self.name}, Number: {self.number}"
+
+
+class HashTable:
+    def __init__(self, size):
+        self.size = size
+        self.table = [None] * size
+        self.elementCount = 0
+
+    def isFull(self):
+        return self.elementCount == self.size
+
+    def hashFunction(self, number):
+        return number % self.size
+
+    def insert(self, record):
+        if self.isFull():
+            print("Hash Table is full!")
+            return False
+
+        position = self.hashFunction(record.get_number())
+        start = position
+
+        while self.table[position] is not None:
+            print(f"Collision at {position}, trying next position...")
+            position = (position + 1) % self.size
+            if position == start:
+                print("No empty slot found.")
+                return False
+
+        self.table[position] = record
+        self.elementCount += 1
+        print(f"{record} inserted at position {position}")
+        return True
+
+    def search(self, number):
+        position = self.hashFunction(number)
+        start = position
+
+        while self.table[position] is not None:
+            if self.table[position].get_number() == number:
+                print(f"Record found at position {position}: {self.table[position]}")
+                return position
+            position = (position + 1) % self.size
+            if position == start:
+                break
+
+        print("Record not found!")
+        return -1
+
+    def display(self):
+        print("\nHash Table Contents:")
+        for i, record in enumerate(self.table):
+            print(f"Position {i}: {record if record else 'Empty'}")
+
+
+def input_record():
+    name = input("Enter Name: ")
+    number = int(input("Enter Phone Number: "))
+    return Record(name, number)
+
+
+def main():
+    size = int(input("Enter size of the hash table: "))
+    hash_table = HashTable(size)
+
+    while True:
+        print("\nMenu:")
+        print("1. Insert")
+        print("2. Search")
+        print("3. Display")
+        print("4. Exit")
+        choice = int(input("Enter your choice: "))
+
+        if choice == 1:
+            record = input_record()
+            hash_table.insert(record)
+        elif choice == 2:
+            number = int(input("Enter Phone Number to Search: "))
+            hash_table.search(number)
+        elif choice == 3:
+            hash_table.display()
+        elif choice == 4:
+            print("Exiting...")
+            break
+        else:
+            print("Invalid choice!")
+
+
+if __name__ == "__main__":
+    main()
